@@ -44,7 +44,7 @@
 
     <main>
         <!-- Description -->
-        <p>Choose your option from below to play.</p>
+        <p>Choose your option from below to play:</p>
         <!-- Buttons to choose which option -->
         <section class="game-options">
             <div class="option option-rock">
@@ -61,6 +61,9 @@
         <section id="game-result">
 
         </section>
+        <section id="score">
+
+        </section>
     </main>
 
     <footer>
@@ -70,10 +73,14 @@
   </body>
   <script>
     // Rock, Paper, Scissors shortened to RPS
+    // Start score at 0
+    let userScore = 0;
+    let compScore = 0;
 
     // Play single round of RPS with the playerSelection and computerSelection
     function playRound(userSelection) {
         let computerSelection;
+
         console.log(userSelection);
 
         // Get computer's selection
@@ -114,16 +121,24 @@
             }
         }
         // Show game result on page
-        let gameResultSection = document.querySelector("#game-result");
+        const gameResultSection = document.querySelector("#game-result");
         let gameResultText;
         if(gameResult === "Draw") {
             gameResultText = "The game is a draw!";
         } else if(gameResult === "Won") {
+            userScore += 1;
             gameResultText = "You win!";
         } else {
+            compScore += 1;
             gameResultText = "You lost :(";
         }
-        gameResultSection.innerHTML = '<p>The Computer chose: <b>' + computerSelection + '</b>.</p><p class="result-text ' + gameResult + '">' + gameResultText + '</p>';
+        // Add image for computer choice
+        const computerSelectionLower = computerSelection.toLowerCase();
+        gameResultSection.innerHTML = '<p>The Computer chose:</p><p id="comp-choice"><img src="' + computerSelectionLower + '-icon.jpg" width="120px" height="120px" /></p><p class="result-text ' + gameResult + '">' + gameResultText + '</p>';
+
+        // Add score to page
+        const scoreSection = document.querySelector("#score");
+        scoreSection.innerHTML = '<h3>User / Computer score:</h3><p>' + userScore + ' / ' + compScore + '</p>';        
     }
 
   </script>
