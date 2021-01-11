@@ -4,25 +4,77 @@
     <meta charset="utf-8"/>
     <title>Functions: Task 2</title>
     <style>
-      
+        body {
+            background-color: #26006f;
+            color: white;
+            font-family: Lato, Arial, serif;
+        }
+        footer {
+            position: absolute;
+            bottom: 5px;
+        }
+        p.result-text {
+            font-size: 40px;
+        }
+        .game-options {
+            overflow: hidden;
+            clear: both;
+        }
+        .option {
+            float: left;
+        }
+        p.result-text.Won {
+            color: #00f4c1;
+        }
+        p.result-text.Loss {
+            color: #fe2cf1;
+        }
+        p.result-text.Draw {
+            color: #0c7cea;
+        }
     </style>
   </head>
 
   <body>
 
-    <section class="preview">
+    <header>
+        <h1>Rock, Paper, Scissors</h1>
+        <h2>Can you beat the machine?</h2>
+    </header>
 
-    </section>
+    <main>
+        <!-- Description -->
+        <p>Choose your option from below to play.</p>
+        <!-- Buttons to choose which option -->
+        <section class="game-options">
+            <div class="option option-rock">
+                <a onclick="playRound('Rock');" href="#" class="option-link"><img src="rock-icon.jpg" alt="Rock" /></a>
+            </div>
+            <div class="option option-paper">
+                <a onclick="playRound('Paper');" href="#" class="option-link"><img src="paper-icon.jpg" alt="Paper" /></a>
+            </div>
+            <div class="option option-scissors">
+                <a onclick="playRound('Scissors');" href="#" class="option-link"><img src="scissors-icon.jpg" alt="Scissors" /></a>
+            </div>
+        </section>
+        <!-- Result -->
+        <section id="game-result">
+
+        </section>
+    </main>
+
+    <footer>
+        <a href="https://www.vecteezy.com/free-vector/rock-paper-scissors">Rock Paper Scissors Vectors by Vecteezy</a>
+    </footer>
 
   </body>
   <script>
     // Rock, Paper, Scissors shortened to RPS
 
     // Play single round of RPS with the playerSelection and computerSelection
-    function playRound(roundNumber) {
-        let gameResult;
+    function playRound(userSelection) {
         let computerSelection;
-        let userSelection;
+        console.log(userSelection);
 
         // Get computer's selection
         // Function to return random selection of RPS
@@ -30,7 +82,6 @@
         function getComputerSelection(max) {
             max = Math.floor(max);
             computerSelection = Math.floor(Math.random() * (Math.floor(max)));
-            console.log("Random number is " + computerSelection);
             // Set computerSelection based on number
             let gameSelections = ["Rock","Paper","Scissors"];
             computerSelection = gameSelections[computerSelection];
@@ -38,21 +89,6 @@
             return computerSelection;
         }
         getComputerSelection(3);
-
-        // Get user's selection
-        function getUserSelection() {
-            // Get input from user
-            userSelection = prompt("Rock, Paper, Scissors?");
-            // Convert selection to sentence case
-            userSelection = userSelection.toLowerCase();
-            let firstLetter = userSelection[0];
-            firstLetter = firstLetter.toUpperCase();
-            userSelection = userSelection.slice(1);
-            userSelection = firstLetter + userSelection;
-            console.log("User selection is " + userSelection);
-            return userSelection;
-        }
-        getUserSelection();
 
         // Check if it's a draw
         if(userSelection === computerSelection) {
@@ -70,23 +106,24 @@
             } else {
                 gameResult = "Loss";
             }
-        } else if(userSelection === "Scissors") {
+        } else {
             if(computerSelection === "Paper") {
                 gameResult = "Won";
             } else {
                 gameResult = "Loss";
             }
-        } else {
-            console.log("Wrong input");
-            return;
         }
-        // Return string that declares winner
-        console.log("The result of round " + roundNumber + " is " + gameResult);
-    }
-
-    // game() function that plays a 5 round game keeps score using loop
-    for(i = 1;i < 6;i++) {
-        playRound(i);
+        // Show game result on page
+        let gameResultSection = document.querySelector("#game-result");
+        let gameResultText;
+        if(gameResult === "Draw") {
+            gameResultText = "The game is a draw!";
+        } else if(gameResult === "Won") {
+            gameResultText = "You win!";
+        } else {
+            gameResultText = "You lost :(";
+        }
+        gameResultSection.innerHTML = '<p>The Computer chose: <b>' + computerSelection + '</b>.</p><p class="result-text ' + gameResult + '">' + gameResultText + '</p>';
     }
 
   </script>
