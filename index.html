@@ -32,6 +32,13 @@
         p.result-text.Draw {
             color: #0c7cea;
         }
+        div#reset-button {
+            color: white;
+            background-color: #673AB7;
+            display: inline-block;
+            padding: 10px;
+            cursor: pointer;
+        }
     </style>
   </head>
 
@@ -48,13 +55,13 @@
         <!-- Buttons to choose which option -->
         <section class="game-options">
             <div class="option option-rock">
-                <a onclick="playRound('Rock');" href="#" class="option-link"><img src="rock-icon.jpg" alt="Rock" /></a>
+                <a href="#" class="option-link"><img src="rock-icon.jpg" alt="Rock" /></a>
             </div>
             <div class="option option-paper">
-                <a onclick="playRound('Paper');" href="#" class="option-link"><img src="paper-icon.jpg" alt="Paper" /></a>
+                <a href="#" class="option-link"><img src="paper-icon.jpg" alt="Paper" /></a>
             </div>
             <div class="option option-scissors">
-                <a onclick="playRound('Scissors');" href="#" class="option-link"><img src="scissors-icon.jpg" alt="Scissors" /></a>
+                <a href="#" class="option-link"><img src="scissors-icon.jpg" alt="Scissors" /></a>
             </div>
         </section>
         <!-- Result -->
@@ -62,6 +69,9 @@
 
         </section>
         <section id="score">
+
+        </section>
+        <section id="reset">
 
         </section>
     </main>
@@ -76,10 +86,24 @@
     // Start score at 0
     let userScore = 0;
     let compScore = 0;
+    let gamesPlayed = 0;
+
+    // Event listeners for buttons
+    const btnRock = document.querySelector('.option-rock a');
+    const btnPaper = document.querySelector('.option-paper a');
+    const btnScissors = document.querySelector('.option-scissors a');
+
+    btnRock.addEventListener('click', (e) => { playRound('Rock');});
+    btnPaper.addEventListener('click', (e) => { playRound('Paper');});
+    btnScissors.addEventListener('click', (e) => { playRound('Scissors');});
 
     // Play single round of RPS with the playerSelection and computerSelection
     function playRound(userSelection) {
         let computerSelection;
+
+        if(gamesPlayed >= 5) {
+            return;
+        }
 
         console.log(userSelection);
 
@@ -127,11 +151,42 @@
             gameResultText = "The game is a draw!";
         } else if(gameResult === "Won") {
             userScore += 1;
+            gamesPlayed += 1;
             gameResultText = "You win!";
         } else {
             compScore += 1;
+            gamesPlayed += 1;
             gameResultText = "You lost :(";
         }
+        // Check if 5 rounds have played
+        console.log(gamesPlayed);
+        if(gamesPlayed >= 5) {
+            if(userScore > compScore) {
+                gameResultText = "YOU WON!";
+            } else if(compScore > userScore) {
+                gameResultText = "MACHINES WIN..";
+            } else {
+                gameResultText = "Somehow no-one won.";
+            }
+
+            // Add reset button
+            const resetSection = document.querySelector('#reset');
+            const btnReset = document.createElement('div');
+            btnReset.setAttribute('id','reset-button');
+            btnReset.textContent = "Try again";
+            console.log(btnReset);
+            resetSection.appendChild(btnReset);
+            btnReset.addEventListener('click', (e) => { 
+                gameResultSection.innerHTML = '';
+                scoreSection.innerHTML = '';
+                userScore = 0;
+                compScore = 0;
+                gamesPlayed = 0;
+                gameResultText = '';
+                resetSection.removeChild(btnReset);
+            });
+        }
+
         // Add image for computer choice
         const computerSelectionLower = computerSelection.toLowerCase();
         gameResultSection.innerHTML = '<p>The Computer chose:</p><p id="comp-choice"><img src="' + computerSelectionLower + '-icon.jpg" width="120px" height="120px" /></p><p class="result-text ' + gameResult + '">' + gameResultText + '</p>';
